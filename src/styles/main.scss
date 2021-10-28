@@ -1,0 +1,29 @@
+@import '~normalize.css/normalize.css';
+@import '~@formanta/sass/meta';
+
+/*body {
+    box-sizing: border-box;
+}*/
+
+pre > code {
+    padding: 0
+}
+
+.footnotes {
+    &-list {
+        @include body2();
+        padding-left: 1.125em;
+    }
+
+    p {
+        //@include body2();
+        margin: 0;
+    }
+}
+
+.bg-white-trans {
+    background: rgba(#fff, 0.65);
+}
+
+@import '~@formanta/sass/style';
+

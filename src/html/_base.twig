@@ -1,0 +1,112 @@
+{% extends '_main.twig' %}
+
+{% block head_meta %}
+    {% if head.title %}
+        <title>{{ head.title }}</title>
+    {% endif %}
+    {% if head.author %}
+        <meta name="author" content="{{ head.author }}"/>
+    {% endif %}
+    {% if head.description %}
+        <meta name="description" content="{{ head.description }}">
+    {% endif %}
+    {% if head.keywords %}
+        <meta name="keywords" content="{{ head.keywords }}">
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+    {% if links.canonical %}
+        <link rel="canonical" href="{{ links.canonical }}">
+    {% endif %}
+
+    {# <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "NewsArticle",
+            "headline": "Open-source framework for publishing content",
+            "datePublished": "2015-10-07T12:02:41Z",
+            "image": [
+                "logo.jpg"
+            ]
+        }
+    </script> #}
+{% endblock %}
+
+{% block head_script %}
+    {{ parent() }}
+    {% if ampEnabled %}
+        {% set amp_version = '0.1' %}
+        <script custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-{{ amp_version }}.js" async=""></script>
+    {% endif %}
+{% endblock %}
+
+{% block head_style %}
+    {% if ampEnabled %}
+        {# @formatter:off #}
+        <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+        <style amp-custom>
+            {# any styles are injected here from build process #}
+        </style>
+        {# @formatter:on #}
+    {% else %}
+        <link href="/styles/main.css" rel="stylesheet" type="text/css"/>
+        {# <style>
+</style> #}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    <header class="sticky flex justify-start items-center top-0 left-0 right-0 pl2 pr4 bg-white-trans z4" data-e2e="header">
+        <div role="button" aria-label="open sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="fixed left-0 pt2 pb1 pl1 pr1 cursor-pointer">
+            ☰
+        </div>
+        <a href="/" class="mxa h-color body1 bold my0 py1" data-e2e="header-title">
+            Some Page
+        </a>
+    </header>
+{% endblock %}
+
+{% block container_inner %}
+    <div data-e2e="content">
+        {{ parent() }}
+    </div>
+{% endblock %}
+
+{% block footer_inner__ %}
+    <footer class="container container-medium center">
+        <p class="mb0">&copy; 2020 Your Page</p>
+        {#
+        can only be tested deployed, enforces SSL, todo: add SSL support to cap
+        {% if ampEnabled %}
+            <amp-script src="js/main.js" width="0" height="0" layout="container">
+            </amp-script>
+        {% endif %} #}
+        <p class="mt0 light">powered by <a href="https://github.com/bemit/create-amp-page">create-amp-page</a></p>
+    </footer>
+{% endblock %}
+
+{% block body_end_script %}
+    {% if not ampEnabled %}
+        {# NETLIFY-CMS #}
+        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js">
+        </script>
+        {#
+        for AMP custom JS is not allowed,
+        thus the redirect after login does not work.
+        The email templates must be adjusted for AMP to correctly work with netlify identity for the admin only.
+        #}
+        <script>
+            if(window.netlifyIdentity) {
+                window.netlifyIdentity.on('init', user => {
+                    if(!user) {
+                        window.netlifyIdentity.on('login', () => {
+                            document.location.href = '/admin/'
+                        })
+                    }
+                })
+            }
+        </script>
+    {% endif %}
+{% endblock %}
